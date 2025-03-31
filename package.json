@@ -10,12 +10,20 @@
   },
   "private": true,
   "scripts": {
-    "dev": "bun run dev:frontend | bun run dev:backend",
+    "dev": "bun run index.ts",
     "dev:frontend": "cd frontend && bun run dev",
     "dev:backend": "cd backend && bun run dev",
     "install": "bun x npm-run-all -p 'install:frontend' 'install:backend'",
     "install:frontend": "bun install --cwd frontend",
     "install:backend": "bun install --cwd backend"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@types/figlet": "^1.7.0",
+    "@types/node": "^22.13.14",
+    "boxen": "^8.0.1",
+    "chalk": "^5.4.1",
+    "figlet": "^1.8.0",
+    "gradient-string": "^3.0.0"
+  }
 }
