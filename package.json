@@ -10,11 +10,12 @@
   },
   "private": true,
   "scripts": {
-    "dev": "run-p dev:frontend dev:backend",
+    "dev": "bun run dev:frontend | bun run dev:backend",
     "dev:frontend": "cd frontend && bun run dev",
     "dev:backend": "cd backend && bun run dev",
-    "dev:sequential": "bun run dev:frontend & bun run dev:backend",
-    "install": "cd frontend && bun install & cd backend && bun install"
+    "install": "bun x npm-run-all -p 'install:frontend' 'install:backend'",
+    "install:frontend": "bun install --cwd frontend",
+    "install:backend": "bun install --cwd backend"
   },
   "type": "module"
 }
