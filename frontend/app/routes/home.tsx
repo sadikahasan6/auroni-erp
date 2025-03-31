@@ -4,7 +4,7 @@ import HomePage from "./home/homePage";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
+    { title: "Home page || Auroni ERP" },
     { name: "description", content: "Welcome to React Router!" },
   ];
 }
