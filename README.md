@@ -1,30 +1,32 @@
 # Auroni ERP
 
-This is an professional opensource ERP for small to large scale business.
+🚀 Modern open-source ERP for small to large businesses. Built with **Bun**, **Elysia**, and **React+Vite**.
 
-This project was created using `bun init` in bun v1.2.7.
-[Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+## ✨ Features
+- Modular architecture (Finance, Inventory, HR, CRM)
+- Real-time dashboards
+- Cross-platform support
+- REST & WebSocket APIs
+- Self-hosted or cloud deployment
 
-To install dependencies:
+## 🛠 Tech Stack
+**Frontend**: React (Vite), TailwindCSS  
+**Backend**: Elysia.js, tRPC  
+**Runtime**: Bun  
+**Database**: PostgreSQL  
+**Auth**: JWT  
 
+## 🚀 Quick Start
 ```bash
+# Install dependencies
 bun install
-```
 
-To run:
-
-```bash
+# Run full-stack
 bun dev
-```
 
-To run frontend only (React + Vite):
-```bash
+# Frontend only
 bun dev:frontend
-```
-To run backend only (Elysia):
-```bash
+
+# Backend only
 bun dev:backend
-```
-
-
 
