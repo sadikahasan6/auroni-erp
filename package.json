@@ -13,7 +13,8 @@
     "dev": "run-p dev:frontend dev:backend",
     "dev:frontend": "cd frontend && bun run dev",
     "dev:backend": "cd backend && bun run dev",
-    "dev:sequential": "bun run dev:frontend & bun run dev:backend"
+    "dev:sequential": "bun run dev:frontend & bun run dev:backend",
+    "install": "cd frontend && bun install & cd backend && bun install"
   },
   "type": "module"
 }
