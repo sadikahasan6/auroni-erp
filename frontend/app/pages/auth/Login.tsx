@@ -1,5 +1,5 @@
 export default function Login(){
-    return <>
-    
-    </>
+    return <div className="auth">
+        
+    </div>
 }

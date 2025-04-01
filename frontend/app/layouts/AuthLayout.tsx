@@ -9,9 +9,8 @@ export function meta({}: Route.MetaArgs) {
 
 export default function AuthLayout() {
   return (
-    <>
-    Working on it.
+    <div>
       <Outlet />
-    </>
+    </div>
   );
 }
