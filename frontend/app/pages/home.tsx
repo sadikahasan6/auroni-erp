@@ -1,6 +1,4 @@
 import type { Route } from "./+types/home";
-import LoginPage from "./login";
-import RegistrationPage from "./registration";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -12,8 +10,7 @@ export function meta({ }: Route.MetaArgs) {
 export default function Home() {
   return (
     <div className="">
-      {/* <RegistrationPage/> */}
-      <LoginPage/>
+      Home page for trial
     </div>
   );
 }
