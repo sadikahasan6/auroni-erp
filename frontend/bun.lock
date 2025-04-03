@@ -6,11 +6,13 @@
       "dependencies": {
         "@react-router/node": "^7.4.1",
         "@react-router/serve": "^7.4.1",
+        "framer-motion": "^12.6.3",
         "isbot": "^5.1.17",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-icons": "^5.5.0",
         "react-router": "^7.4.1",
+        "react-router-dom": "^7.4.1",
       },
       "devDependencies": {
         "@react-router/dev": "^7.4.1",
@@ -764,6 +766,8 @@
     "react-router": ["react-router@7.4.1", "", { "dependencies": { "@types/cookie": "^0.6.0", "cookie": "^1.0.1", "set-cookie-parser": "^2.6.0", "turbo-stream": "2.4.0" }, "peerDependencies": { "react": ">=18", "react-dom": ">=18" }, "optionalPeers": ["react-dom"] }, "sha512-Vmizn9ZNzxfh3cumddqv3kLOKvc7AskUT0dC1prTabhiEi0U4A33LmkDOJ79tXaeSqCqMBXBU/ySX88W85+EUg=="],
 
     "react-router-devtools": ["react-router-devtools@1.1.8", "", { "dependencies": { "@babel/core": "^7.26.7", "@babel/generator": "^7.26.5", "@babel/parser": "^7.26.7", "@babel/traverse": "^7.26.7", "@babel/types": "^7.26.7", "@radix-ui/react-accordion": "^1.2.2", "@radix-ui/react-select": "^2.1.5", "beautify": "^0.0.8", "bippy": "^0.3.7", "chalk": "^5.4.1", "clsx": "^2.1.1", "date-fns": "^4.1.0", "framer-motion": "^12.0.6", "react-d3-tree": "^3.6.4", "react-diff-viewer-continued": "^4.0.5", "react-hotkeys-hook": "^4.6.1", "react-tooltip": "^5.28.0" }, "optionalDependencies": { "@biomejs/cli-darwin-arm64": "^1.9.4", "@rollup/rollup-darwin-arm64": "^4.32.1", "@rollup/rollup-linux-x64-gnu": "^4.32.1" }, "peerDependencies": { "react": ">=17", "react-dom": ">=17", "react-router": ">=7.0.0", "vite": ">=5.0.0 || >=6.0.0" } }, "sha512-yk6x6O8ghj9Fz0Z8z24yYxbBu9xV/NsTMtJ1c3kl+p3Uj1vLYAHvLZafnuRLn/q+DfelPZNNd4+h80K9OAo5Bg=="],
+
+    "react-router-dom": ["react-router-dom@7.4.1", "", { "dependencies": { "react-router": "7.4.1" }, "peerDependencies": { "react": ">=18", "react-dom": ">=18" } }, "sha512-L3/4tig0Lvs6m6THK0HRV4eHUdpx0dlJasgCxXKnavwhh4tKYgpuZk75HRYNoRKDyDWi9QgzGXsQ1oQSBlWpAA=="],
 
     "react-style-singleton": ["react-style-singleton@2.2.3", "", { "dependencies": { "get-nonce": "^1.0.0", "tslib": "^2.0.0" }, "peerDependencies": { "@types/react": "*", "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc" }, "optionalPeers": ["@types/react"] }, "sha512-b6jSvxvVnyptAiLjbkWLE/lOnR4lfTtDAl+eUC7RZy+QQWc6wRzIV2CE6xBuMmDxc2qIihtDCZD5NPOFl7fRBQ=="],
 
