@@ -79,7 +79,7 @@ async function runDevServers() {
   console.log(chalk.dim(`⏱️  Start Time: ${startTime}\n`));
 
   // Initialize processes with cross-platform spawn
-  const frontendProcess = spawn('bun', ['run', 'dev'], { 
+  const frontendProcess = spawn('bun', ['run', 'dev --host'], { 
     cwd: 'frontend', 
     stdio: 'pipe',
     shell: os.platform() === 'win32' // Use shell on Windows
