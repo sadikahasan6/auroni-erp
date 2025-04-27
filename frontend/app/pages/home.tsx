@@ -2,6 +2,7 @@ import Benefits from "~/components/benefits";
 import CoreFeatures from "~/components/corefeatures";
 import CTASection from "~/components/cta";
 import FAQ from "~/components/faq";
+import Footer from "~/components/footer";
 import Header from "~/components/header";
 import HeroSection from "~/components/hero";
 
@@ -14,6 +15,7 @@ export default function Home() {
       <Benefits/>
       <FAQ/>
       <CTASection/>
+      <Footer/>
     </>
   );
 }

@@ -57,7 +57,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     if (error.status === 404) {
       message = "404";
       details = "The requested page could not be found.";
-      image = <img src={pagenotfound} width={250} alt="404 Not Found" />;
+      image = <img src={pagenotfound} width={400} alt="404 Not Found" />;
     } else {
       message = "Error";
       details = error.statusText || details;

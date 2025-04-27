@@ -1,8 +1,14 @@
 import { useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
+// Define the FAQ item interface
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
 export default function FAQ() {
-  const faqs = [
+  const faqs: FAQItem[] = [
     { question: "Is the ERP customizable to my business needs?", answer: "Yes, our ERP system is highly flexible and can be tailored to match your workflows, processes, and industry-specific needs." },
     { question: "Can I integrate it with my existing tools?", answer: "Absolutely! We support integration with popular accounting, CRM, and inventory management software through APIs." },
     { question: "Is it available on mobile devices?", answer: "Yes, our ERP system is mobile-friendly and can be accessed via web apps on smartphones and tablets." },
@@ -10,9 +16,9 @@ export default function FAQ() {
     { question: "What is the onboarding process like?", answer: "Our team assists you at every step — from setup, training to going live, making onboarding smooth and quick." },
   ];
 
-  const [openIndex, setOpenIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const toggleFAQ = (index) => {
+  const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
@@ -45,9 +51,13 @@ export default function FAQ() {
                 </span>
               </button>
 
-              {openIndex === index && (
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  openIndex === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+                }`}
+              >
                 <p className="mt-3 text-gray-600">{faq.answer}</p>
-              )}
+              </div>
             </div>
           ))}
         </div>
