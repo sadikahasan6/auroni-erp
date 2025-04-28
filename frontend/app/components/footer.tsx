@@ -83,7 +83,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-gray-700 text-center">
           <p className="text-gray-400">
-            © {new Date().getFullYear()} ERP Solutions. All rights reserved.
+            © {new Date().getFullYear()} Auroni ERP. All rights reserved.
           </p>
         </div>
       </div>

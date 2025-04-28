@@ -7,10 +7,11 @@ export default function Header() {
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   return (
+    <>
     <header className="fixed bg-white inset-x-0 top-0 z-10 border-b border-black/5 dark:border-white/10">
       <nav className="flex h-14 items-center justify-between gap-8 px-4 sm:px-6">
         <div className="flex items-center">
-          <img src="./logo.png" alt="Company Logo" className="w-40" />
+          <a href="/"><img src="./logo.png" alt="Company Logo" className="w-40" /></a>
         </div>
 
         {/* Desktop Navigation */}
@@ -69,5 +70,7 @@ export default function Header() {
         </div>
       )}
     </header>
+    <div className="h-14"></div>
+    </>
   );
 }

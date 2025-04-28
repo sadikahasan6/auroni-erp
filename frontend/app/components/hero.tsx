@@ -1,7 +1,7 @@
 export default function HeroSection() {
     return (
       <div className="bg-[url(/home.jpg)] min-h-130 bg-cover flex items-end justify-center">
-        <div className="bg-amber-950/50 p-7 mx-5 mt-20 mb-5 rounded-lg max-w-lg sm:max-w-xl md:max-w-2xl text-center">
+        <div className="bg-amber-950/50 p-7 mx-5 mt-10 mb-5 md:mb-10 rounded-lg max-w-lg sm:max-w-xl md:max-w-2xl text-center">
           <div className="text-white md:text-5xl text-3xl font-bold">
             ERP: Powering Progress. Simplifying Business.
           </div>
