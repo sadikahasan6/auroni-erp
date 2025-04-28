@@ -10,7 +10,7 @@ export default function CTASection() {
           </p>
           <div className="mt-8 flex justify-center">
             <a
-              href="#"
+              href="/demo"
               className="inline-block bg-white text-teal-950 font-semibold px-8 py-3 rounded-md shadow hover:bg-gray-100 transition duration-300"
             >
               Schedule a Free Demo

@@ -38,7 +38,7 @@ export default function Header() {
             Login
           </a>
           <a 
-            href="/register" 
+            href="/signup" 
             className="text-sm text-white bg-amber-950  font-semibold px-6 py-2 rounded-md"
           >
             Register
@@ -62,7 +62,7 @@ export default function Header() {
             Login
           </a>
           <a 
-            href="/register" 
+            href="/signup" 
             className="block w-full text-sm text-center text-white bg-amber-950  font-semibold py-2 mt-4 rounded-md"
           >
             Register

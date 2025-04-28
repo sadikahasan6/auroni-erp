@@ -37,6 +37,16 @@ export default function Footer() {
                   Contact
                 </a>
               </li>
+              <li>
+                <a href="/news" className="hover:text-indigo-400 transition-colors duration-200">
+                  News & events
+                </a>
+              </li>
+              <li>
+                <a href="/demo" className="hover:text-indigo-400 transition-colors duration-200">
+                  Request Demo
+                </a>
+              </li>
             </ul>
           </div>
 

@@ -2,6 +2,14 @@ import { useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import Footer from '~/components/footer';
 import Header from '~/components/header';
+import type { Route } from './+types/docs';
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "Documentation|| Auroni ERP" },
+    { name: "description", content: "Explore our comprehensive documentation to get started, configure, and maximize the potential of your ERP system." },
+  ];
+}
 
 export default function Documentation() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
