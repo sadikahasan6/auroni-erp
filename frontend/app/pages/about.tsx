@@ -1,6 +1,14 @@
 import { FaRocket, FaUsers, FaLightbulb } from "react-icons/fa";
 import Footer from "~/components/footer";
 import Header from "~/components/header";
+import type { Route } from "./+types/about";
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "About || Auroni ERP" },
+    { name: "description", content: "Choose a plan that fits your needs, from small startups to large enterprises, with transparent pricing and no hidden fees." },
+  ];
+}
 
 export default function About() {
   return (

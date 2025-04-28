@@ -9,6 +9,14 @@ import {
 } from "react-icons/fa";
 import Footer from "~/components/footer";
 import Header from "~/components/header";
+import type { Route } from "./+types/features";
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "Features || Auroni ERP" },
+    { name: "description", content: "Discover the tools and capabilities that make our ERP system the perfect solution for streamlining your business operations." },
+  ];
+}
 
 export default function Features() {
   const features = [
