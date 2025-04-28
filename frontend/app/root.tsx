@@ -10,7 +10,9 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { ErrorUI } from "./pages/errors/error-ui";
 import pagenotfound from "./pages/errors/404.svg";
-import { Helmet, HelmetProvider } from "react-helmet-async";
+
+
+
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -27,15 +29,10 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <HelmetProvider>
       <html lang="en">
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <Helmet>
-            <title>Auroni ERP - Make your business simple and easy.</title>
-            <meta name="description" content="Welcome to the home page." />
-          </Helmet>
           <Links />
         </head>
         <body className="">
@@ -44,7 +41,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <Scripts />
         </body>
       </html>
-    </HelmetProvider>
   );
 }
 

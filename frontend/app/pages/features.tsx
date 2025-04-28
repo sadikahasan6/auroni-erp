@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet-async";
+
 import {
   FaCogs,
   FaChartLine,
@@ -52,10 +52,6 @@ export default function Features() {
 
   return (
     <>
-      <Helmet>
-        <title>Features | Auroni ERP</title>
-        <meta name="description" content="Learn more about us here." />
-      </Helmet>
       <Header />
       <section className="py-16 bg-gray-50">
         {/* Hero Section */}
