@@ -11,4 +11,5 @@ export default [
   route("signup","pages/trial.tsx"),
   route("demo","pages/demo.tsx"),
   route("login","pages/login.tsx"),
+  route("dashboard", "pages/dashboard.tsx"),
 ] satisfies RouteConfig;
