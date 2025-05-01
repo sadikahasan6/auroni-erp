@@ -1,173 +1,135 @@
-import { useState } from "react";
-import { FaCheckCircle } from 'react-icons/fa';
-import type { Route } from "./+types/trial";
-export function meta({}: Route.MetaArgs) {
-    return [
-      { title: "Signup for 14 days free trial || Auroni ERP" },
-      { name: "description", content: "Experience the power of Auroni ERP with a 14-day free trial. No credit card required. Get started in minutes." },
-    ];
-  }
+import { useState, useEffect } from "react";
+import { z } from "zod";
+import api from "../lib/api";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
-export default function Trial() {
-  const [name, setName] = useState("");
+// Define schema matching backend
+const registerSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  name: z.string().optional(),
+});
+
+const TrialSignup = () => {
   const [email, setEmail] = useState("");
-  const [company, setCompany] = useState("");
-  const [companySize, setCompanySize] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  // Redirect if authenticated
+  useEffect(() => {
+    console.log("TrialSignup: isAuthenticated:", isAuthenticated);
+    if (isAuthenticated) {
+      console.log("TrialSignup: Authenticated, redirecting to /dashboard");
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccess(false);
+    setErrors({});
+    setSuccess("");
+
+    // Validate form data
+    const result = registerSchema.safeParse({ email, password, name: name || undefined });
+    if (!result.success) {
+      const fieldErrors: { [key: string]: string } = {};
+      result.error.issues.forEach((issue) => {
+        fieldErrors[issue.path[0]] = issue.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    const payload = { email, password, name: name || undefined };
+    console.log("TrialSignup: Sending payload:", payload);
 
     try {
-      const response = await fetch("http://localhost:3000/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password: "temporary-password", company }), // Adjust password logic
-      });
-      const data = await response.json();
-      if (!data.success) {
-        setError(data.message);
-        setLoading(false);
-        return;
-      }
-      setSuccess(true);
-      setLoading(false);
-      // Optionally redirect to login
-      setTimeout(() => (window.location.href = "/login"), 2000);
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-      setLoading(false);
+      const response = await api.post("/auth/register", payload);
+      console.log("TrialSignup: Response:", response.data);
+      const { token, user } = response.data;
+      localStorage.setItem("token", token);
+      setSuccess(`Welcome, ${user.email}! Signup successful.`);
+      setTimeout(() => navigate("/dashboard", { replace: true }), 1000);
+    } catch (err: any) {
+      console.error("TrialSignup: Error:", err.response?.data || err.message);
+      setErrors({ general: err.response?.data?.error || "Signup failed" });
     }
   };
 
+  if (isAuthenticated === null) {
+    console.log("TrialSignup: Showing loading screen");
+    return <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">Loading...</div>;
+  }
+
+  if (isAuthenticated) {
+    return null; // Navigate will handle redirection
+  }
+
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
-        <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
-          Start Your <span className="text-amber-950">Free Trial</span>
-        </h1>
-        <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
-          Experience the power of ERP Solutions with a 14-day free trial. No credit card required. Get started in minutes.
-        </p>
-      </div>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-white p-8 rounded-lg shadow-md border-t-4 border-amber-950">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Sign Up for Your Free Trial</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-950 focus:border-amber-950"
-                  placeholder="Your Name"
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Work Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-950 focus:border-amber-950"
-                  placeholder="Your Work Email"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="company" className="block text-sm font-medium text-gray-700">
-                  Company Name
-                </label>
-                <input
-                  type="text"
-                  id="company"
-                  value={company}
-                  onChange={(e) => setCompany(e.target.value)}
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-950 focus:border-amber-950"
-                  placeholder="Your Company"
-                />
-              </div>
-              <div>
-                <label htmlFor="company-size" className="block text-sm font-medium text-gray-700">
-                  Company Size
-                </label>
-                <select
-                  id="company-size"
-                  value={companySize}
-                  onChange={(e) => setCompanySize(e.target.value)}
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-950 focus:border-amber-950"
-                >
-                  <option value="">Select company size</option>
-                  <option>1-10 employees</option>
-                  <option>11-50 employees</option>
-                  <option>51-200 employees</option>
-                  <option>201+ employees</option>
-                </select>
-              </div>
-              {error && <p className="text-red-600 text-sm">{error}</p>}
-              {success && <p className="text-green-600 text-sm">Account created! Redirecting to login...</p>}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full px-6 py-3 bg-amber-950 text-white font-semibold rounded-lg shadow-md hover:bg-amber-900 transition-colors duration-200 disabled:opacity-50"
-              >
-                {loading ? "Signing Up..." : "Start Free Trial"}
-              </button>
-            </form>
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
+      <div className="max-w-md w-full bg-gray-800 rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-bold text-amber-950 mb-6 text-center">
+          Sign Up for ERP Trial
+        </h2>
+        {errors.general && <p className="text-red-500 mb-4">{errors.general}</p>}
+        {success && <p className="text-green-500 mb-4">{success}</p>}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full mt-1 p-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-950"
+              required
+            />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
-          <div className="bg-white p-8 rounded-lg shadow-md border-t-4 border-amber-950">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">What You Get with Your Trial</h2>
-            <ul className="space-y-4">
-              {[
-                'Access to all Starter plan features',
-                'Customizable workflows',
-                'Real-time analytics dashboard',
-                'Mobile access for on-the-go management',
-                'Priority email support',
-                'No credit card required',
-              ].map((benefit, index) => (
-                <li key={index} className="flex items-center">
-                  <FaCheckCircle className="text-amber-950 mr-3 text-xl" />
-                  <span className="text-gray-600">{benefit}</span>
-                </li>
-              ))}
-            </ul>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full mt-1 p-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-950"
+              required
+            />
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
-        </div>
-      </div>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl font-bold text-gray-900">Need More Information?</h2>
-        <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-          Explore our features or contact our team to learn how ERP Solutions can transform your business.
-        </p>
-        <div className="mt-6 flex justify-center gap-4">
-          <a
-            href="/features"
-            className="px-8 py-3 bg-amber-950 text-white font-semibold rounded-lg shadow-md hover:bg-amber-900 transition-colors duration-200"
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium">
+              Name (Optional)
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)} // Fixed typo from setEmail to setName
+              className="w-full mt-1 p-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-950"
+            />
+            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-amber-950 text-white py-2 rounded-md hover:bg-amber-900 transition"
           >
-            View Features
-          </a>
-          <a
-            href="/contact"
-            className="px-8 py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition-colors duration-200"
-          >
-            Contact Us
-          </a>
-        </div>
+            Sign Up
+          </button>
+        </form>
       </div>
-    </section>
+    </div>
   );
-}
+};
+
+export default TrialSignup;

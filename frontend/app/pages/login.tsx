@@ -1,132 +1,126 @@
-import { useState } from "react";
-import type { Route } from "./+types/login";
-export function meta({}: Route.MetaArgs) {
-    return [
-      { title: "Login || Auroni ERP" },
-      { name: "description", content: "Log in to access your ERP system, manage workflows, and unlock powerful business tools." },
-    ];
-  }
+import { useState, useEffect } from "react";
+import { z } from "zod";
+import api from "../lib/api";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
-export default function Login() {
+// Define schema matching backend
+const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  // Redirect if authenticated
+  useEffect(() => {
+    console.log("Login: isAuthenticated:", isAuthenticated);
+    if (isAuthenticated) {
+      console.log("Login: Authenticated, redirecting to /dashboard");
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
+    setErrors({});
+    setSuccess("");
+
+    // Validate form data
+    const result = loginSchema.safeParse({ email, password });
+    if (!result.success) {
+      const fieldErrors: { [key: string]: string } = {};
+      result.error.issues.forEach((issue) => {
+        fieldErrors[issue.path[0]] = issue.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    const payload = { email, password };
+    console.log("Login: Sending payload:", payload);
 
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-      if (!data.success) {
-        setError(data.message);
-        setLoading(false);
-        return;
-      }
-      // Store tokens in localStorage or cookies
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
-      // Redirect to dashboard or protected route
-      window.location.href = "/dashboard"; // Adjust as needed
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-      setLoading(false);
+      const response = await api.post("/auth/login", payload);
+      console.log("Login: Response:", response.data);
+      const { token, user } = response.data;
+      localStorage.setItem("token", token);
+      setSuccess(`Welcome back, ${user.email}!`);
+      setTimeout(() => navigate("/dashboard", { replace: true }), 1000);
+    } catch (err: any) {
+      console.error("Login: Error:", err.response?.data || err.message);
+      setErrors({ general: err.response?.data?.error || "Login failed" });
     }
   };
 
+  if (isAuthenticated === null) {
+    console.log("Login: Showing loading screen");
+    return <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">Loading...</div>;
+  }
+
+  if (isAuthenticated) {
+    return null; // Navigate will handle redirection
+  }
+
   return (
-    <section className="py-16 md:h-screen bg-gray-50 flex items-center">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <div className="text-center md:text-left">
-            <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
-              Welcome to <span className="text-amber-950">ERP Solutions</span>
-            </h1>
-            <p className="mt-4 text-lg text-gray-600 max-w-md mx-auto md:mx-0">
-              Log in to access your ERP system, manage workflows, and unlock powerful business tools.
-            </p>
-            <div className="mt-6 flex flex-col sm:flex-row justify-center md:justify-start gap-4">
-              <a
-                href="/signup"
-                className="px-8 py-3 bg-amber-950 text-white font-semibold rounded-lg shadow-md hover:bg-amber-900 transition-colors duration-200"
-              >
-                Start Free Trial
-              </a>
-              <a
-                href="/demo"
-                className="px-8 py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition-colors duration-200"
-              >
-                Schedule a Demo
-              </a>
-            </div>
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
+      <div className="max-w-md w-full bg-gray-800 rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-bold text-amber-950 mb-6 text-center">
+          Log In to ERP
+        </h2>
+        {errors.general && <p className="text-red-500 mb-4">{errors.general}</p>}
+        {success && <p className="text-green-500 mb-4">{success}</p>}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full mt-1 p-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-950"
+              required
+            />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
-          <div className="bg-white p-8 rounded-lg shadow-md border-t-4 border-amber-950">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Log In</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-950 focus:border-amber-950"
-                  placeholder="Your Email"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-950 focus:border-amber-950"
-                  placeholder="Your Password"
-                  required
-                />
-              </div>
-              <div className="flex justify-between items-center">
-                <a
-                  href="/forgot-password" // Placeholder; implement later if needed
-                  className="text-sm text-amber-950 hover:text-amber-900 transition-colors duration-200"
-                >
-                  Forgot Password?
-                </a>
-              </div>
-              {error && <p className="text-red-600 text-sm">{error}</p>}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full px-6 py-3 bg-amber-950 text-white font-semibold rounded-lg shadow-md hover:bg-amber-900 transition-colors duration-200 disabled:opacity-50"
-              >
-                {loading ? "Logging In..." : "Log In"}
-              </button>
-            </form>
-            <p className="mt-4 text-center text-gray-600">
-              Don’t have an account?{' '}
-              <a
-                href="/signup"
-                className="text-amber-950 font-semibold hover:text-amber-900 transition-colors duration-200"
-              >
-                Sign Up
-              </a>
-            </p>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full mt-1 p-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-950"
+              required
+            />
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
-        </div>
+          <button
+            type="submit"
+            className="w-full bg-amber-950 text-white py-2 rounded-md hover:bg-amber-900 transition"
+          >
+            Log In
+          </button>
+        </form>
+        <p className="mt-4 text-center text-sm">
+          Don't have an account?{" "}
+          <a href="/signup" className="text-amber-950 hover:underline">
+            Sign up for a trial
+          </a>
+        </p>
       </div>
-    </section>
+    </div>
   );
-}
+};
+
+export default Login;
